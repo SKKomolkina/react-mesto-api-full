@@ -1,0 +1,4 @@
+.photo__like_active {
+    opacity: 1;
+    background-image: url(../../../../images/heartfill.svg);
+}

@@ -1,0 +1,11 @@
+.profile__photo {
+    width: 120px;
+    height: 120px;
+    margin: 0;
+    padding: 0;
+    border-radius: 50% 50%;
+}
+
+.profile__photo:hover {
+    opacity: 0.2;
+}

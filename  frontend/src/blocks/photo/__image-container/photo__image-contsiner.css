@@ -1,0 +1,18 @@
+.photo__image-container {
+    max-width: 282px;
+    max-height: 282px;
+    margin: 0;
+    padding: 0;
+    padding-bottom: 25px;
+    position: relative;
+    overflow: hidden;
+    align-self: flex-start;
+}
+
+@media (max-width: 560px) {
+    
+    .photo__image-container {
+        /* max-width: 75vw;
+        max-height: 75vh; */
+    }
+}

@@ -1,0 +1,12 @@
+.photo {
+    max-width: 282px;
+    border-radius: 10px;
+    background-color: white;
+    color: black;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+}

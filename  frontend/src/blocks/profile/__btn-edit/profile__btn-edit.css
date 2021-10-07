@@ -1,0 +1,25 @@
+.profile__btn-edit {
+    background-image: url(../../../images/pen.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: black;
+    min-height: 24px;
+    min-width: 24px;
+    margin: 0;
+    margin-bottom: 15px;
+    padding: 0;
+    cursor: pointer;
+    border-color: white;
+}
+
+.profile__btn-edit:hover {
+    opacity: 0.6;
+}
+
+@media (max-width: 550px) {
+
+    .profile__btn-edit {
+        min-height: 18px;
+        min-width: 18px;
+    }
+}

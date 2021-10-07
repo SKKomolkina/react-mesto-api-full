@@ -1,0 +1,28 @@
+.popup__cross {
+    min-height: 40px;
+    min-width: 40px;
+    margin: 0;
+    margin-left: 434px;
+    padding: 0;
+    background-image: url(../../../images/close.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.popup__cross:hover {
+    opacity: 0.6;
+}
+
+
+@media (max-width: 560px) {
+
+    .popup__cross {
+        margin-left: 250px;
+        max-width: 26px;
+        max-height: 26px;
+        background-image: url(../../../images/Closelittle.svg);
+    } 
+}
