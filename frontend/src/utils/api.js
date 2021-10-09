@@ -6,28 +6,37 @@ class Api {
         this._headers = options.headers;
     }
 
-    getData() {
-        return Promise.all([this.getUserData(), this.getInitialCards()]);
+    getData(token) {
+        return Promise.all([this.getUserData(token), this.getInitialCards(token)]);
     }
 
-    getInitialCards() {
+    getInitialCards(token) {
         return fetch(`${this._url}/cards`, {
-            headers: this._headers
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
         })
             .then(res => this._checkResult(res));
     }
 
-    getUserData() {
+    getUserData(token) {
         return fetch(`${this._url}/users/me`, {
-            headers: this._headers
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            }
         })
             .then(res => this._checkResult(res));
     }
 
-    editProfile(name, about) {
+    editProfile(name, about, token) {
         return fetch(`${this._url}/users/me`, {
             method: 'PATCH',
-            headers: this._headers,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
                 name: name,
                 about: about,
@@ -36,10 +45,13 @@ class Api {
             .then(res => this._checkResult(res));
     }
 
-    addCard(name, link) {
+    addCard(name, link, token) {
         return fetch(`${this._url}/cards`, {
             method: 'POST',
-            headers: this._headers,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
                 name: name,
                 link: link,
@@ -48,34 +60,46 @@ class Api {
             .then(res => this._checkResult(res))
     }
 
-    setLike(cardId) {
-        return fetch(`${this._url}/cards/likes/${cardId}`, {
+    setLike(cardId, token) {
+        return fetch(`${this._url}/cards/${cardId}/likes`, {
             method: 'PUT',
-            headers: this._headers,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
         })
             .then(res => this._checkResult(res));
     }
 
-    deleteLike(cardId) {
-        return fetch(`${this._url}/cards/likes/${cardId}`, {
+    deleteLike(cardId, token) {
+        return fetch(`${this._url}/cards/${cardId}/likes`, {
             method: 'DELETE',
-            headers: this._headers,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
         })
             .then(res => this._checkResult(res));
     }
 
-    deleteCard(cardId) {
+    deleteCard(cardId, token) {
         return fetch(`${this._url}/cards/${cardId}`, {
             method: 'DELETE',
-            headers: this._headers,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
         })
             .then(res => this._checkResult(res));
     }
 
-    changeAvatar(avatarUrl) {
+    changeAvatar(avatarUrl, token) {
         return fetch(`${this._url}/users/me/avatar`, {
             method: 'PATCH',
-            headers: this._headers,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
                 avatar: avatarUrl,
             })
@@ -94,7 +118,7 @@ class Api {
 const api = new Api({
     baseUrl: BASE_URL,
     headers: {
-        Authorization: `Bearer ${window.localStorage.getItem('jwt')}`,
+        Authorization: `${window.localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json',
     }
 });

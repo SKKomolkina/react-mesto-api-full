@@ -17,18 +17,20 @@ const {
 } = require('../controllers/users');
 
 // http://localhost:3000/users
-router.get('/users', getUsers);
+router.get('/', getUsers);
+
+router.get('/me', getCurrentUser);
 
 // http://localhost:3000/users/:userId
-router.get('/users/:userId', celebrate({
+router.get('/:_id', celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().required().hex().length(24),
+    userId: Joi.string().alphanum().length(24),
   }),
 }), getUserById);
 
 // http://localhost:3000/users/me
-router.get('/users/me', getCurrentUser);
-router.patch('/users/me', celebrate({
+
+router.patch('/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
@@ -36,9 +38,9 @@ router.patch('/users/me', celebrate({
 }), updateUser);
 
 // http://localhost:3000/users/me/avatar
-router.patch('/users/me/avatar', celebrate({
+router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().custom(validateUrl),
+    avatar: Joi.required().custom(validateUrl),
   }).unknown(true),
 }), updateAvatar);
 

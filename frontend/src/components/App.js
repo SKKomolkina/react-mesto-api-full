@@ -40,40 +40,62 @@ function App() {
 
     const history = useHistory();
 
-
     React.useEffect(() => {
-        api.getUserData()
-            .then((data) => {
-                setCurrentUser(data);
-            })
-            .catch((err) => console.log(err));
-    }, [isLoggedIn])
+        const jwt = localStorage.getItem('jwt');
 
-    React.useEffect(() => {
-        api.getInitialCards()
-            .then((cards) => {
-                setCards(cards);
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-
-    }, [isLoggedIn])
+        if (jwt) {
+            auth.getContent(jwt)
+                .then((res) => {
+                    setEmailValue(res.email);
+                    setIsLoggedIn(true);
+                    history.push('/');
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    }, [isLoggedIn, history])
 
     React.useEffect(() => {
         const jwt = localStorage.getItem('jwt');
         if (jwt) {
             auth.getContent(jwt).then((res) => {
                 if (res) {
-                    setEmailValue(res.data.email);
+                    setEmailValue(res.email);
                 }
                 setIsLoggedIn(true);
                 history.push('/');
             })
                 .catch(err => console.log(err))
         }
-
     }, [isLoggedIn, history])
+
+    React.useEffect(() => {
+        const jwt = localStorage.getItem('jwt');
+        if (jwt) {
+            api.getUserData(jwt)
+                .then((data) => {
+                    setCurrentUser(data.currentUser);
+                })
+                .catch((err) => console.log(err));
+
+            api.getInitialCards(jwt)
+                .then((cards) => {
+                    setCards(cards);
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+        }
+    }, [isLoggedIn])
+
+    // React.useEffect(() => {
+    //     const jwt = localStorage.getItem('jwt');
+    //     if (jwt) {
+    //
+    //     }
+    // }, [isLoggedIn])
+
 
 
     // <---------- Registration & Auth ---------->
@@ -103,10 +125,12 @@ function App() {
 
     function authorization(email, password) {
         auth.authorize(email, password)
-            .then(() => {
-                if (email !== emailValue) {
-                    setEmailValue(email);
-                }
+            .then((res) => {
+                const jwt = res.token;
+                jwt && localStorage.setItem('jwt', jwt);
+
+                console.log(jwt, 'jwt');
+                setEmailValue(email);
                 setIsLoggedIn(true);
                 history.push('/');
             })
@@ -170,61 +194,79 @@ function App() {
 
     // <---------- Update User & Avatar ---------->
 
-    function handleUpdateUser({ name, about }) {
-        api.editProfile(name, about)
-            .then((data) => {
-                setCurrentUser(data);
+    function handleUpdateUser(data) {
+    if (isLoggedIn) {
+        const jwt = localStorage.getItem('jwt');
+
+        api.editProfile(data.name, data.about, jwt)
+            .then((res) => {
+                setCurrentUser(res.name, res.about);
                 setIsEditProfilePopupOpen(false);
             })
             .catch((err) => {
                 console.log(err);
             });
     }
+    }
 
-    function handleUpdateAvatar({ avatar }) {
-        api.changeAvatar(avatar)
-            .then((data) => {
-                setCurrentUser(data);
-                setIsEditAvatarPopupOpen(false);
-            })
-            .catch((err) => console.log(err));
+    function handleUpdateAvatar(link) {
+        if (isLoggedIn) {
+            const jwt = localStorage.getItem('jwt');
+
+            api.changeAvatar(link, jwt)
+                .then((data) => {
+                    setCurrentUser(data);
+                    setIsEditAvatarPopupOpen(false);
+                })
+                .catch((err) => console.log(err));
+        }
     }
 
 
     // <---------- PhotoCards Actions ---------->
 
     function handleAddPlaceSubmit(card) {
-        api.addCard(card.name, card.link)
-            .then((newCard) => {
-                setCards([newCard, ...cards]);
-                setIsAddPlacePopupOpen(false);
-            })
-            .catch((err) => console.log(err));
+        if (isLoggedIn) {
+            const jwt = localStorage.getItem('jwt');
+
+            api.addCard(card.name, card.link, jwt)
+                .then((newCard) => {
+                    setCards([newCard, ...cards]);
+                    setIsAddPlacePopupOpen(false);
+                })
+                .catch((err) => console.log(err));
+        }
     }
 
     function handleCardLike(card) {
-        const isLiked = card.likes.some(i => i._id === currentUser._id);
-        const changeLike = isLiked ? api.deleteLike(card._id) : api.setLike(card._id)
+        if (isLoggedIn) {
+            const jwt = localStorage.getItem('jwt');
+            const isLiked = card.likes.some(i => i._id === currentUser._id);
+            const changeLike = isLiked ? api.deleteLike(card._id, jwt) : api.setLike(card._id, jwt);
 
-        changeLike.then((newCard) => {
-            setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-        })
-            .catch((err) => console.log(err));
+            changeLike.then((newCard) => {
+                setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+            })
+                .catch((err) => console.log(err));
+        }
     }
 
     function handleCardDelete(card) {
-        api.deleteCard(card._id)
-            .then(() => {
-                const newCard = cards.filter((c) => c._id !== card._id);
-                setCards(newCard);
-            })
-            .catch((err) => console.log(err));
+        if (isLoggedIn) {
+            const jwt = localStorage.getItem('jwt');
+
+            api.deleteCard(card._id, jwt)
+                .then(() => {
+                    const newCard = cards.filter((c) => c._id !== card._id);
+                    setCards(newCard);
+                })
+                .catch((err) => console.log(err));
+        }
     }
 
     function handleCardClick(selectedCard) {
         setSelectedCard({ name: selectedCard.name, link: selectedCard.link });
     }
-
 
 
     return (
@@ -238,6 +280,7 @@ function App() {
 
                 <Switch>
 
+                    {currentUser &&
                     <ProtectedRoute
                         exact path="/"
                         isLoggedIn={isLoggedIn}
@@ -253,6 +296,7 @@ function App() {
 
                         cards={cards}
                     />
+                    }
 
                     <Route path="/sign-in">
                         <Login authorization={authorization} />
@@ -271,19 +315,23 @@ function App() {
 
                 <Footer />
 
+                {currentUser &&
                 <EditAvatarPopup
                     isOpen={isEditAvatarPopupOpen}
                     onClose={closeAllPopups}
 
                     onUpdateAvatar={handleUpdateAvatar}
                 />
+                }
 
+                {currentUser &&
                 <EditProfilePopup
                     isOpen={isEditProfilePopupOpen}
                     onClose={closeAllPopups}
 
                     onUpdateUser={handleUpdateUser}
                 />
+                }
 
                 <AddPlacePopup
                     isOpen={isAddPlacePopupOpen}

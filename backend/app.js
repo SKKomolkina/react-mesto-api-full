@@ -107,7 +107,7 @@ app.post('/signup', celebrate({
 app.use(auth);
 
 // http://localhost:3000/users
-app.use('/', userRouter);
+app.use('/users', userRouter);
 
 // http://localhost:3000/cards
 app.use('/', cardRouter);
