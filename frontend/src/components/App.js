@@ -89,14 +89,6 @@ function App() {
         }
     }, [isLoggedIn])
 
-    // React.useEffect(() => {
-    //     const jwt = localStorage.getItem('jwt');
-    //     if (jwt) {
-    //
-    //     }
-    // }, [isLoggedIn])
-
-
 
     // <---------- Registration & Auth ---------->
 
@@ -130,7 +122,7 @@ function App() {
                 jwt && localStorage.setItem('jwt', jwt);
 
                 console.log(jwt, 'jwt');
-                setEmailValue(email);
+                setEmailValue(res.email);
                 setIsLoggedIn(true);
                 history.push('/');
             })
@@ -198,7 +190,7 @@ function App() {
     if (isLoggedIn) {
         const jwt = localStorage.getItem('jwt');
 
-        api.editProfile(data.name, data.about, jwt)
+        api.editProfile(data.user.name, data.user.about, jwt)
             .then((res) => {
                 setCurrentUser(res.name, res.about);
                 setIsEditProfilePopupOpen(false);
@@ -215,7 +207,7 @@ function App() {
 
             api.changeAvatar(link, jwt)
                 .then((data) => {
-                    setCurrentUser(data);
+                    setCurrentUser(data.user.avatar);
                     setIsEditAvatarPopupOpen(false);
                 })
                 .catch((err) => console.log(err));
