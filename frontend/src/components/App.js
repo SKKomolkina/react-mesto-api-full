@@ -40,22 +40,6 @@ function App() {
 
     const history = useHistory();
 
-    React.useEffect(() => {
-        const jwt = localStorage.getItem('jwt');
-        if (jwt) {
-            auth.getContent(jwt).then((res) => {
-                if (res) {
-                    setEmailValue(res.data.email);
-                    setCurrentUser(res);
-                }
-                setIsLoggedIn(true);
-                history.push('/');
-            })
-                .catch(err => console.log(err))
-        }
-
-    }, [isLoggedIn, history])
-
 
     React.useEffect(() => {
         api.getUserData()
@@ -64,6 +48,32 @@ function App() {
             })
             .catch((err) => console.log(err));
     }, [])
+
+    React.useEffect(() => {
+        api.getInitialCards()
+            .then((cards) => {
+                setCards(cards);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+
+    }, [])
+
+    React.useEffect(() => {
+        const jwt = localStorage.getItem('jwt');
+        if (jwt) {
+            auth.getContent(jwt).then((res) => {
+                if (res) {
+                    setEmailValue(res.data.email);
+                }
+                setIsLoggedIn(true);
+                history.push('/');
+            })
+                .catch(err => console.log(err))
+        }
+
+    }, [isLoggedIn, history])
 
 
     // <---------- Registration & Auth ---------->
@@ -87,24 +97,17 @@ function App() {
             })
             .finally(() => {
                 handleInfoPopupOpen();
-                setTimeout(closeAllPopups, 3000);
+                setTimeout(closeAllPopups, 4000);
             })
     }
 
     function authorization(email, password) {
         auth.authorize(email, password)
-            .then((data) => {
-                localStorage.setItem('jwt', data.token);
-                setIsLoggedIn(true);
-                history.push('/');
-            })
-            .catch(() => {
-                changeInfoPopup({
-                    path: failImage,
-                    text: 'Что-то пошло не так! Попробуйте ещё раз.',
-                })
-                console.log('no');
-            })
+        if (email !== emailValue) {
+            setEmailValue(email);
+        }
+        setIsLoggedIn(true);
+        history.push('/');
     }
 
 
@@ -162,10 +165,8 @@ function App() {
 
     // <---------- Update User & Avatar ---------->
 
-    function handleUpdateUser(data) {
-        const jwt = localStorage.getItem('jwt');
-
-        api.editProfile(data, jwt)
+    function handleUpdateUser({ name, about }) {
+        api.editProfile(name, about)
             .then((data) => {
                 setCurrentUser(data);
                 setIsEditProfilePopupOpen(false);
@@ -175,10 +176,8 @@ function App() {
             });
     }
 
-    function handleUpdateAvatar(data) {
-        const jwt = localStorage.getItem('jwt');
-
-        api.changeAvatar(data, jwt)
+    function handleUpdateAvatar({ avatar }) {
+        api.changeAvatar(avatar)
             .then((data) => {
                 setCurrentUser(data);
                 setIsEditAvatarPopupOpen(false);
@@ -190,9 +189,7 @@ function App() {
     // <---------- PhotoCards Actions ---------->
 
     function handleAddPlaceSubmit(card) {
-        const jwt = localStorage.getItem('jwt');
-
-        api.addCard(card, jwt)
+        api.addCard(card.name, card.link)
             .then((newCard) => {
                 setCards([newCard, ...cards]);
                 setIsAddPlacePopupOpen(false);
@@ -201,33 +198,20 @@ function App() {
     }
 
     function handleCardLike(card) {
-        const jwt = localStorage.getItem('jwt');
         const isLiked = card.likes.some(i => i._id === currentUser._id);
+        const changeLike = isLiked ? api.deleteLike(card._id) : api.setLike(card._id)
 
-        const changeLike = (newCard) => {
-            const newCards = cards.map((item) => item._id === card._id ? newCard : item);
-            setCards(newCards);
-        }
-
-        if (!isLiked) {
-            api.setLike(card._id, jwt)
-                .then((newCard) => {
-                    changeLike(newCard);
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
-        }
+        changeLike.then((newCard) => {
+            setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+        })
+            .catch((err) => console.log(err));
     }
 
     function handleCardDelete(card) {
-        const jwt = localStorage.getItem('jwt');
-
-        api.deleteCard(card._id, jwt)
+        api.deleteCard(card._id)
             .then(() => {
                 const newCard = cards.filter((c) => c._id !== card._id);
                 setCards(newCard);
-                closeAllPopups();
             })
             .catch((err) => console.log(err));
     }
@@ -235,6 +219,7 @@ function App() {
     function handleCardClick(selectedCard) {
         setSelectedCard({ name: selectedCard.name, link: selectedCard.link });
     }
+
 
 
     return (
