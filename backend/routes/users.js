@@ -40,7 +40,7 @@ router.patch('/me', celebrate({
 // http://localhost:3000/users/me/avatar
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.required().custom(validateUrl),
+    avatar: Joi.string().required().custom(validateUrl),
   }).unknown(true),
 }), updateAvatar);
 

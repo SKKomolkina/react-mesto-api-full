@@ -75,7 +75,7 @@ function App() {
         if (jwt) {
             api.getUserData(jwt)
                 .then((data) => {
-                    setCurrentUser(data);
+                    setCurrentUser(data.name, data.about);
                 })
                 .catch((err) => console.log(err));
 
