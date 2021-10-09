@@ -44,8 +44,8 @@ const validateUrl = (value) => {
 const allowedCors = [
   'localhost:3000',
   'http://localhost:3000',
-  'http://skomolkina.nomoredomains.monster/',
-  'https://skomolkina.nomoredomains.monster/'
+  'http://skomolkina.nomoredomains.monster',
+  'https://skomolkina.nomoredomains.monster'
 ]
 
 const { PORT = 3000 } = process.env;
