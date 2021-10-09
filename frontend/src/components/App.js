@@ -40,43 +40,21 @@ function App() {
 
     const history = useHistory();
 
-    const checkToken = () => {
-        if (localStorage.getItem('jwt')) {
-            const jwt = localStorage.getItem('jwt');
-
-            auth.getContent(jwt)
-                .then((res) => {
-                    if (res.email !== emailValue) {
-                        setEmailValue(res.email);
-                        setCurrentUser(res);
-                    }
-                    setIsLoggedIn(true);
-                    history.push('/');
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
-        }
-    }
-
     React.useEffect(() => {
-        checkToken();
-    }, [isLoggedIn])
-
-    React.useEffect(() => {
-        if (isLoggedIn) {
-            const jwt = localStorage.getItem('jwt');
-
-            api.getData(jwt)
-                .then((res) => {
-                    setCurrentUser(res[0]);
-                    setCards(res[1].reverse());
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+        const jwt = localStorage.getItem('jwt');
+        if (jwt) {
+            auth.getContent(jwt).then((res) => {
+                if (res) {
+                    setEmailValue(res.data.email);
+                    setCurrentUser(res);
+                }
+                setIsLoggedIn(true);
+                history.push('/');
+            })
+                .catch(err => console.log(err))
         }
-    }, [isLoggedIn]);
+
+    }, [isLoggedIn, history])
 
 
     React.useEffect(() => {
@@ -109,7 +87,7 @@ function App() {
             })
             .finally(() => {
                 handleInfoPopupOpen();
-                setTimeout(closeAllPopups, 4000);
+                setTimeout(closeAllPopups, 3000);
             })
     }
 
