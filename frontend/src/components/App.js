@@ -280,7 +280,6 @@ function App() {
 
                 <Switch>
 
-                    {currentUser &&
                     <ProtectedRoute
                         exact path="/"
                         isLoggedIn={isLoggedIn}
@@ -296,7 +295,6 @@ function App() {
 
                         cards={cards}
                     />
-                    }
 
                     <Route path="/sign-in">
                         <Login authorization={authorization} />
@@ -315,23 +313,19 @@ function App() {
 
                 <Footer />
 
-                {currentUser &&
                 <EditAvatarPopup
                     isOpen={isEditAvatarPopupOpen}
                     onClose={closeAllPopups}
 
                     onUpdateAvatar={handleUpdateAvatar}
                 />
-                }
 
-                {currentUser &&
                 <EditProfilePopup
                     isOpen={isEditProfilePopupOpen}
                     onClose={closeAllPopups}
 
                     onUpdateUser={handleUpdateUser}
                 />
-                }
 
                 <AddPlacePopup
                     isOpen={isAddPlacePopupOpen}
