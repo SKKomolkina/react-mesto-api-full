@@ -46,7 +46,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
                 onChange={handleChangeNameValue}
                 value={nameValue}
                 id="popup__input_type_title"
-                className="popup__input popup__input_type_title"
+                className="popup__input popup__input_type_title" 
                 type="text" name="name"
                 placeholder="Название"
                 minLength="1"

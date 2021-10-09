@@ -1,86 +1,111 @@
-export class Api {
+import { BASE_URL } from './auth';
+
+class Api {
     constructor(options) {
         this._url = options.baseUrl;
         this._headers = options.headers;
     }
 
-    getData() {
-        return Promise.all([this.getUserData(), this.getInitialCards()]);
+    getData(token) {
+        return Promise.all([this.getUserData(token), this.getInitialCards(token)]);
     }
 
-    getInitialCards() {
+    getInitialCards(token) {
         return fetch(`${this._url}/cards`, {
-            headers: this._headers
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
         })
             .then(res => this._checkResult(res));
     }
 
-    getUserData() {
+    getUserData(token) {
         return fetch(`${this._url}/users/me`, {
-            headers: this._headers
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
         })
             .then(res => this._checkResult(res));
     }
 
-    editProfile(name, about) {
+    editProfile(data, token) {
         return fetch(`${this._url}/users/me`, {
             method: 'PATCH',
-            headers: this._headers,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
-                name: name,
-                about: about,
+                name: data.name,
+                about: data.about,
             })
         })
             .then(res => this._checkResult(res));
     }
 
-    addCard(name, link) {
+    addCard(data, token) {
         return fetch(`${this._url}/cards`, {
             method: 'POST',
-            headers: this._headers,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
-                name: name,
-                link: link,
+                name: data.name,
+                link: data.link,
             })
         })
             .then(res => this._checkResult(res))
     }
 
-    setLike(cardId) {
+    setLike(cardId, token) {
         return fetch(`${this._url}/cards/likes/${cardId}`, {
             method: 'PUT',
-            headers: this._headers,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
         })
             .then(res => this._checkResult(res));
     }
 
-    deleteLike(cardId) {
+    deleteLike(cardId, token) {
         return fetch(`${this._url}/cards/likes/${cardId}`, {
             method: 'DELETE',
-            headers: this._headers,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
         })
             .then(res => this._checkResult(res));
     }
 
-    deleteCard(cardId) {
+    deleteCard(cardId, token) {
         return fetch(`${this._url}/cards/${cardId}`, {
             method: 'DELETE',
-            headers: this._headers,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
         })
             .then(res => this._checkResult(res));
     }
 
-    changeAvatar(avatarUrl) {
+    changeAvatar(avatarUrl, token) {
         return fetch(`${this._url}/users/me/avatar`, {
             method: 'PATCH',
-            headers: this._headers,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
                 avatar: avatarUrl,
             })
         })
             .then(res => this._checkResult(res));
     }
-
 
     _checkResult(res) {
         if (res.ok) {
@@ -90,12 +115,6 @@ export class Api {
     }
 }
 
-const api = new Api({
-    baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-25',
-    headers: {
-        authorization: 'e0ccb70a-8300-4fff-b1a9-1044a866d1c7',
-        'Content-Type': 'application/json'
-    }
-});
+const api = new Api({ baseUrl: BASE_URL });
 
-export default api
+export { api }

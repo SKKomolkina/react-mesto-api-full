@@ -14,7 +14,7 @@ function EditAvatarPopup({ name, isOpen, onClose, onUpdateAvatar }) {
     function handleChangeAvatar(evt) {
         setAvatar(evt.target.value);
     }
-
+    
     function handleSubmit(evt) {
         evt.preventDefault();
 

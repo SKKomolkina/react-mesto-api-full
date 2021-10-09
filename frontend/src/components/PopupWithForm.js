@@ -8,8 +8,8 @@ function PopupWithForm({ title, name, buttonText, children, isOpen, onClose, onS
                 type="button" onClick={onClose}></button>
             <form
                 onSubmit={onSubmit}
-                id="popup__form" className={`popup__form popup__form_${name}`}
-                method="get" name={`${name}-form`} noValidate
+                className={`popup__form popup__form_${name}`}
+                name={`${name}-form`}
             >
 
                 <h2 className="popup__title">{title}</h2>

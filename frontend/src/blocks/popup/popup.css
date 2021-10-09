@@ -1,16 +1,19 @@
 .popup {
-    display: flex;
-    position: fixed;
-    top: 0;
-    left: 0;
     min-width: 100%;
     min-height: 100%;
     margin: 0;
     padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+
     background-color: rgba(0, 0, 0, 0.5);
+
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     z-index: 2;
     visibility: hidden;
     opacity: 0;

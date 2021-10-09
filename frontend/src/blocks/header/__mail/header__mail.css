@@ -1,7 +1,11 @@
 .header__mail {
+    margin: 0;
+    margin-right: 24px;
     color: #fff;
     font-weight: 500;
     font-size: 18px;
     line-height: 22px;
     text-align: right;
+
+    align-self: flex-end;
 }
