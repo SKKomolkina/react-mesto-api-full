@@ -186,11 +186,11 @@ function App() {
 
     // <---------- Update User & Avatar ---------->
 
-    function handleUpdateUser(data) {
+    function handleUpdateUser(name, about) {
     if (isLoggedIn) {
         const jwt = localStorage.getItem('jwt');
 
-        api.editProfile(data.user.name, data.user.about, jwt)
+        api.editProfile(name, about, jwt)
             .then((res) => {
                 setCurrentUser(res.name, res.about);
                 setIsEditProfilePopupOpen(false);
@@ -206,8 +206,8 @@ function App() {
             const jwt = localStorage.getItem('jwt');
 
             api.changeAvatar(link, jwt)
-                .then((data) => {
-                    setCurrentUser(data.user.avatar);
+                .then((res) => {
+                    setCurrentUser(res.link);
                     setIsEditAvatarPopupOpen(false);
                 })
                 .catch((err) => console.log(err));
