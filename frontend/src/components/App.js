@@ -186,13 +186,13 @@ function App() {
 
     // <---------- Update User & Avatar ---------->
 
-    function handleUpdateUser(name, about) {
+    function handleUpdateUser(data) {
     if (isLoggedIn) {
         const jwt = localStorage.getItem('jwt');
 
-        api.editProfile(name, about, jwt)
+        api.editProfile(data.name, data.about, jwt)
             .then((res) => {
-                setCurrentUser(res.name, res.about);
+                setCurrentUser(res);
                 setIsEditProfilePopupOpen(false);
             })
             .catch((err) => {
