@@ -10,6 +10,8 @@ const DefaultError = require('../constants/DefaultError');
 const ValidationError = require('../constants/ValidationError');
 const UnauthorizedError = require('../constants/UnauthorizedError');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
