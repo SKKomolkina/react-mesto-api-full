@@ -47,7 +47,7 @@ function App() {
                 setCurrentUser(data);
             })
             .catch((err) => console.log(err));
-    }, [])
+    }, [isLoggedIn])
 
     React.useEffect(() => {
         api.getInitialCards()
@@ -58,7 +58,7 @@ function App() {
                 console.log(err);
             })
 
-    }, [])
+    }, [isLoggedIn])
 
     React.useEffect(() => {
         const jwt = localStorage.getItem('jwt');
@@ -103,11 +103,16 @@ function App() {
 
     function authorization(email, password) {
         auth.authorize(email, password)
-        if (email !== emailValue) {
-            setEmailValue(email);
-        }
-        setIsLoggedIn(true);
-        history.push('/');
+            .then(() => {
+                if (email !== emailValue) {
+                    setEmailValue(email);
+                }
+                setIsLoggedIn(true);
+                history.push('/');
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
 
