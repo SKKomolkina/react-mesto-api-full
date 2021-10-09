@@ -87,7 +87,7 @@ function App() {
                     console.log(err);
                 })
         }
-    }, [isLoggedIn])
+    }, [isLoggedIn, history])
 
 
     // <---------- Registration & Auth ---------->
