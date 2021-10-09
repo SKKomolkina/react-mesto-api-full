@@ -34,8 +34,9 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://skkomolkina.github.io/mesto-react/",
+  "homepage": "http://skomolkina.nomoredomains.monster/",
   "devDependencies": {
     "gh-pages": "^3.2.3"
   }
 }
+
