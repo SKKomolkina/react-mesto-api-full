@@ -74,14 +74,13 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
-  const userId = req.user._id;
-
-  User.findById(userId)
-    .orFail()
-    .catch(() => {
-      throw new NotFoundError('Пользователь не найден');
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw new UnauthorizedError('Необходима авторизация');
+      }
+      res.status(200).send(user);
     })
-    .then((user) => res.status(200).send({ user }))
     .catch(next);
 };
 
@@ -107,7 +106,18 @@ module.exports.updateUser = (req, res, next) => {
 
   User.findByIdAndUpdate(req.user._id, { name, about },
     { new: true, runValidators: true })
-    .then((user) => res.status(200).send(user))
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
+      } else {
+        res.status(200).send(user);
+      }
+    })
+    .catch((err) => {
+      if ((err.name === 'CastError') || (err.name === 'ValidationError')) {
+        throw new NotFoundError('Gереданы некорректные данные');
+      }
+    })
     .catch(next);
 };
 
