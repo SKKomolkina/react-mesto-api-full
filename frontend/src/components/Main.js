@@ -1,5 +1,5 @@
 import React from 'react';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import CurrentUserContext from '../contexts/CurrentUserContext';
 
 import Card from './Card.js';
 
@@ -33,7 +33,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike
                     key={card._id}
                     onCardClick={onCardClick}
                     onCardLike={onCardLike}
-                    onCardDelete={onCardDelete}  
+                    onCardDelete={onCardDelete}
                     />
                     )
                     )}

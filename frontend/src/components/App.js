@@ -16,7 +16,7 @@ import Register from './Register';
 import {api} from '../utils/api';
 import * as auth from '../utils/auth';
 
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import CurrentUserContext from '../contexts/CurrentUserContext';
 import ProtectedRoute from './ProtectedRoute';
 
 import successImage from '../images/success.svg';
@@ -25,7 +25,7 @@ import failImage from '../images/fail.svg';
 function App() {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
-    const [currentUser, setCurrentUser] = React.useState({});
+    const [currentUser, setCurrentUser] = React.useState(React.useContext(CurrentUserContext));
     const [emailValue, setEmailValue] = React.useState('');
 
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
@@ -41,45 +41,45 @@ function App() {
     const history = useHistory();
 
     React.useEffect(() => {
-        const jwt = localStorage.getItem('jwt');
+        checkToken();
+    }, [isLoggedIn])
 
-        if (jwt) {
+    const checkToken = () => {
+        if (localStorage.getItem('jwt')) {
+            const jwt = localStorage.getItem('jwt');
+
             auth.getContent(jwt)
                 .then((user) => {
-                    setEmailValue(user.avatar);
+                    if (user.email !== emailValue) {
+                        setEmailValue(user.email);
+                        setCurrentUser(user);
+                    }
+
                     setIsLoggedIn(true);
                     history.push('/');
                 })
                 .catch((err) => {
                     console.log(err);
-                });
+                })
         }
-    }, [isLoggedIn, history])
-
+    }
 
     React.useEffect(() => {
         const jwt = localStorage.getItem('jwt');
         if (jwt) {
-            api.getUserData(jwt)
-                .then((user) => {
-                    setCurrentUser({ name: user.name, about: user.about });
+            api.getData(jwt)
+                .then((res) => {
+                    setCurrentUser(res[0]);
+                    setCards(res[1].reverse);
                 })
                 .catch((err) => console.log(err));
-
-            api.getInitialCards(jwt)
-                .then((cards) => {
-                    setCards(cards);
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
         }
     }, [isLoggedIn])
 
 
     // <---------- Registration & Auth ---------->
 
-    function registration(email, password) {
+    const registration = (email, password) => {
         auth.register(email, password)
             .then(() => {
                 changeInfoPopup({
@@ -102,15 +102,15 @@ function App() {
             })
     }
 
-    function authorization(email, password) {
+    const authorization = (email, password) => {
         auth.authorize(email, password)
             .then((res) => {
                 const jwt = res.token;
                 jwt && localStorage.setItem('jwt', jwt);
 
                 console.log(jwt, 'jwt');
-                setCurrentUser(res.name, res.about);
-                setEmailValue(res.email);
+                // setCurrentUser(res.name, res.about);
+                // setEmailValue(res.email);
                 setIsLoggedIn(true);
                 history.push('/');
             })

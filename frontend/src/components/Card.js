@@ -1,5 +1,5 @@
 import React from 'react';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import CurrentUserContext from '../contexts/CurrentUserContext';
 
 function Card({ card, onCardClick, onCardLike, onCardDelete }) {
     const currentUser = React.useContext(CurrentUserContext);
@@ -17,7 +17,7 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
         onCardDelete(card);
     }
 
-    //сверяем айди карточки 
+    //сверяем айди карточки
     const isOwn = card.owner._id === currentUser._id;
 
     //класс, позволяющий при совпадении _.id удалить карточку
