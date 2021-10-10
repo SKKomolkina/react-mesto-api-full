@@ -54,7 +54,7 @@ function App() {
                     console.log(err);
                 });
         }
-    }, [history])
+    }, [history]);
 
     React.useEffect(() => {
         if (isLoggedIn) {
@@ -66,7 +66,7 @@ function App() {
                         console.log(err);
                     })
         }
-    }, [isLoggedIn])
+    }, [isLoggedIn]);
 
     React.useEffect(() => {
         if (isLoggedIn) {
@@ -76,7 +76,7 @@ function App() {
                 })
                 .catch((err) => console.log(err));
         }
-    }, [isLoggedIn])
+    }, [isLoggedIn]);
 
 
     // <---------- Registration & Auth ---------->
@@ -106,12 +106,14 @@ function App() {
 
     function authorization(email, password) {
         auth.authorize(email, password)
-            .then((data) => {
-                if (data.token) {
-                    setIsLoggedIn(true);
+            .then((res) => {
+                    const jwt = res.token;
+                    jwt && localStorage.setItem('jwt', jwt);
+
+                    console.log(jwt, 'jwt');
                     setEmailValue(email);
+                    setIsLoggedIn(true);
                     history.push('/');
-                }
             })
             .catch((err) => {
                 console.log(err);
@@ -167,39 +169,31 @@ function App() {
         document.addEventListener('keydown', closeByEsc);
 
         return () => document.removeEventListener('keydown', closeByEsc)
-    }, [])
+    }, []);
 
 
 
     // <---------- Update User & Avatar ---------->
 
     function handleUpdateUser(data) {
-        if (isLoggedIn) {
-            const jwt = localStorage.getItem('jwt');
-
-            api.editProfile(data.name, data.about, jwt)
+            api.editProfile(data, localStorage.jwt)
                 .then((res) => {
-                    setCurrentUser(res.name, res.about);
+                    setCurrentUser(res);
                     setIsEditProfilePopupOpen(false);
                 })
                 .catch((err) => {
                     console.log(err);
                 });
-        }
     }
 
     function handleUpdateAvatar(link) {
-        if (isLoggedIn) {
-            const jwt = localStorage.getItem('jwt');
-
-            api.changeAvatar(link, jwt)
+            api.changeAvatar(link, localStorage.jwt)
                 .then((data) => {
-                    setCurrentUser({currentUser: data.avatar});
+                    setCurrentUser(data);
                     setIsEditAvatarPopupOpen(false);
                 })
                 .catch((err) => console.log(err));
         }
-    }
 
 
     // <---------- PhotoCards Actions ---------->
@@ -326,7 +320,7 @@ function App() {
 
             </div>
         </CurrentUserContext.Provider>
-    );
+    )
 }
 
 export default App;

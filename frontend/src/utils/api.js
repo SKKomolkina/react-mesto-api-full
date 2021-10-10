@@ -30,7 +30,7 @@ class Api {
             .then(res => this._checkResult(res));
     }
 
-    editProfile(name, about, token) {
+    editProfile(data, token) {
         return fetch(`${this._url}/users/me`, {
             method: 'PATCH',
             headers: {
@@ -38,8 +38,8 @@ class Api {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                name: name,
-                about: about,
+                name: data.name,
+                about: data.about,
             })
         })
             .then(res => this._checkResult(res));

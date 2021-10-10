@@ -18,11 +18,11 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike
 
                     <div className="profile__info">
                         <h1 className="profile__name">{currentUser.name}</h1>
-                        <button className="profile__btn-edit" type="button" value="" onClick={onEditProfile}></button>
+                        <button className="profile__btn-edit" type="button" value="" onClick={onEditProfile} />
                         <p className="profile__about">{currentUser.about}</p>
                     </div>
 
-                    <button className="profile__btn-add" type="button" onClick={onAddPlace}></button>
+                    <button className="profile__btn-add" type="button" onClick={onAddPlace} />
                 </div>
             </section>
 
