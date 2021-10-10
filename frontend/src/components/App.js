@@ -16,7 +16,7 @@ import Register from './Register';
 import {api} from '../utils/api';
 import * as auth from '../utils/auth';
 
-import CurrentUserContext from '../contexts/CurrentUserContext';
+import {CurrentUserContext} from '../contexts/CurrentUserContext';
 import ProtectedRoute from './ProtectedRoute';
 
 import successImage from '../images/success.svg';
@@ -46,56 +46,37 @@ function App() {
         if (jwt) {
             auth.getContent(jwt)
                 .then((res) => {
-                    setEmailValue(res.email);
                     setIsLoggedIn(true);
+                    setEmailValue(res.email);
                     history.push('/');
                 })
                 .catch((err) => {
                     console.log(err);
                 });
         }
-    }, [isLoggedIn, history])
+    }, [history])
 
     React.useEffect(() => {
-        const jwt = localStorage.getItem('jwt');
-        if (jwt) {
-            auth.getContent(jwt).then((res) => {
-                if (res) {
-                    setEmailValue(res.email);
-                }
-                setIsLoggedIn(true);
-                history.push('/');
-            })
-                .catch(err => console.log(err))
+        if (isLoggedIn) {
+            api.getInitialCards(localStorage.jwt)
+                    .then((cards) => {
+                        setCards(cards);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
         }
-    }, [isLoggedIn, history])
+    }, [isLoggedIn])
 
     React.useEffect(() => {
-        const jwt = localStorage.getItem('jwt');
-        if (jwt) {
-            api.getUserData(jwt)
+        if (isLoggedIn) {
+            api.getUserData(localStorage.jwt)
                 .then((data) => {
                     setCurrentUser(data);
                 })
                 .catch((err) => console.log(err));
-
-            api.getInitialCards(jwt)
-                .then((cards) => {
-                    setCards(cards);
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
         }
     }, [isLoggedIn])
-
-    // React.useEffect(() => {
-    //     const jwt = localStorage.getItem('jwt');
-    //     if (jwt) {
-    //
-    //     }
-    // }, [isLoggedIn])
-
 
 
     // <---------- Registration & Auth ---------->
@@ -125,14 +106,12 @@ function App() {
 
     function authorization(email, password) {
         auth.authorize(email, password)
-            .then((res) => {
-                const jwt = res.token;
-                jwt && localStorage.setItem('jwt', jwt);
-
-                console.log(jwt, 'jwt');
-                setEmailValue(email);
-                setIsLoggedIn(true);
-                history.push('/');
+            .then((data) => {
+                if (data.token) {
+                    setIsLoggedIn(true);
+                    setEmailValue(email);
+                    history.push('/');
+                }
             })
             .catch((err) => {
                 console.log(err);

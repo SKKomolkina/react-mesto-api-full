@@ -1,10 +1,4 @@
 import React from 'react';
 
-const CurrentUserContext = React.createContext({
-    _id: null,
-    name: '',
-    about: '',
-    avatar: '',
-});
+export const CurrentUserContext = React.createContext();
 
-export default CurrentUserContext;
