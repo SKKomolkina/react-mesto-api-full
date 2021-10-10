@@ -25,7 +25,7 @@ import failImage from '../images/fail.svg';
 function App() {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
-    const [currentUser, setCurrentUser] = React.useState(React.useContext(CurrentUserContext));
+    const [currentUser, setCurrentUser] = React.useState({});
     const [emailValue, setEmailValue] = React.useState('');
 
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
@@ -40,40 +40,62 @@ function App() {
 
     const history = useHistory();
 
-
     React.useEffect(() => {
-        api.getUserData()
-            .then((data) => {
-                setCurrentUser(data);
-            })
-            .catch((err) => console.log(err));
-    }, [isLoggedIn])
+        const jwt = localStorage.getItem('jwt');
 
-    React.useEffect(() => {
-        api.getInitialCards()
-            .then((cards) => {
-                setCards(cards);
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-
-    }, [isLoggedIn])
+        if (jwt) {
+            auth.getContent(jwt)
+                .then((res) => {
+                    setEmailValue(res.email);
+                    setIsLoggedIn(true);
+                    history.push('/');
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    }, [isLoggedIn, history])
 
     React.useEffect(() => {
         const jwt = localStorage.getItem('jwt');
         if (jwt) {
             auth.getContent(jwt).then((res) => {
                 if (res) {
-                    setEmailValue(res.data.email);
+                    setEmailValue(res.email);
                 }
                 setIsLoggedIn(true);
                 history.push('/');
             })
                 .catch(err => console.log(err))
         }
-
     }, [isLoggedIn, history])
+
+    React.useEffect(() => {
+        const jwt = localStorage.getItem('jwt');
+        if (jwt) {
+            api.getUserData(jwt)
+                .then((data) => {
+                    setCurrentUser(data);
+                })
+                .catch((err) => console.log(err));
+
+            api.getInitialCards(jwt)
+                .then((cards) => {
+                    setCards(cards);
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+        }
+    }, [isLoggedIn])
+
+    // React.useEffect(() => {
+    //     const jwt = localStorage.getItem('jwt');
+    //     if (jwt) {
+    //
+    //     }
+    // }, [isLoggedIn])
+
 
 
     // <---------- Registration & Auth ---------->
@@ -114,7 +136,7 @@ function App() {
             })
             .catch((err) => {
                 console.log(err);
-        });
+            });
     }
 
 
@@ -172,28 +194,28 @@ function App() {
 
     // <---------- Update User & Avatar ---------->
 
-    function handleUpdateUser({ name, about }) {
+    function handleUpdateUser(data) {
         if (isLoggedIn) {
             const jwt = localStorage.getItem('jwt');
 
-            api.editProfile(name, about, jwt)
-                .then(() => {
-                    setCurrentUser(currentUser.name, currentUser.about);
+            api.editProfile(data.name, data.about, jwt)
+                .then((res) => {
+                    setCurrentUser(res.name, res.about);
                     setIsEditProfilePopupOpen(false);
                 })
                 .catch((err) => {
                     console.log(err);
                 });
         }
-
     }
 
-    function handleUpdateAvatar({ avatar }) {
+    function handleUpdateAvatar(link) {
         if (isLoggedIn) {
+            const jwt = localStorage.getItem('jwt');
 
-            api.changeAvatar(avatar)
-                .then(() => {
-                    setCurrentUser(currentUser.avatar);
+            api.changeAvatar(link, jwt)
+                .then((data) => {
+                    setCurrentUser(data);
                     setIsEditAvatarPopupOpen(false);
                 })
                 .catch((err) => console.log(err));
@@ -219,7 +241,6 @@ function App() {
     function handleCardLike(card) {
         if (isLoggedIn) {
             const jwt = localStorage.getItem('jwt');
-
             const isLiked = card.likes.some(i => i._id === currentUser._id);
             const changeLike = isLiked ? api.deleteLike(card._id, jwt) : api.setLike(card._id, jwt);
 
