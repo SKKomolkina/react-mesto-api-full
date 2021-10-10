@@ -74,7 +74,7 @@ function App() {
         if (isLoggedIn) {
             api.getUserData(localStorage.jwt)
                 .then((data) => {
-                    setCurrentUser(data);
+                    setCurrentUser({data});
                 })
                 .catch((err) => console.log(err));
         }
