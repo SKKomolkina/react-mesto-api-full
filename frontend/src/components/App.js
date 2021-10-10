@@ -46,7 +46,7 @@ function App() {
         if (jwt) {
             auth.getContent(jwt)
                 .then((res) => {
-                    setEmailValue(res.email);
+                    setEmailValue(res.data.email);
                     setIsLoggedIn(true);
                     history.push('/');
                 })
@@ -56,19 +56,6 @@ function App() {
         }
     }, [isLoggedIn, history])
 
-    React.useEffect(() => {
-        const jwt = localStorage.getItem('jwt');
-        if (jwt) {
-            auth.getContent(jwt).then((res) => {
-                if (res) {
-                    setEmailValue(res.email);
-                }
-                setIsLoggedIn(true);
-                history.push('/');
-            })
-                .catch(err => console.log(err))
-        }
-    }, [isLoggedIn, history])
 
     React.useEffect(() => {
         const jwt = localStorage.getItem('jwt');
@@ -192,11 +179,7 @@ function App() {
 
         api.editProfile(data, jwt)
             .then((res) => {
-                setCurrentUser({
-                    ...currentUser,
-                    name: res.data.name,
-                    about: res.data.about,
-                });
+                setCurrentUser({ res });
                 setIsEditProfilePopupOpen(false);
             })
             .catch((err) => {
@@ -211,10 +194,7 @@ function App() {
 
             api.changeAvatar(link, jwt)
                 .then((res) => {
-                    setCurrentUser({
-                        ...currentUser,
-                        avatar: res.data.avatar,
-                    });
+                    setCurrentUser({ res });
                     setIsEditAvatarPopupOpen(false);
                 })
                 .catch((err) => console.log(err));
