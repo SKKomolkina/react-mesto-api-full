@@ -74,7 +74,7 @@ function App() {
                     console.log(err);
                 })
         }
-    }, [isLoggedIn, history])
+    }, [isLoggedIn])
 
 
     // <---------- Registration & Auth ---------->
@@ -109,7 +109,7 @@ function App() {
                 jwt && localStorage.setItem('jwt', jwt);
 
                 console.log(jwt, 'jwt');
-                setEmailValue(res);
+                setEmailValue(res.email);
                 setIsLoggedIn(true);
                 history.push('/');
             })
