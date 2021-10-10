@@ -62,7 +62,7 @@ function App() {
         if (jwt) {
             api.getUserData(jwt)
                 .then((data) => {
-                    setCurrentUser(data.currentUser);
+                    setCurrentUser(data);
                 })
                 .catch((err) => console.log(err));
 
@@ -109,7 +109,9 @@ function App() {
                 jwt && localStorage.setItem('jwt', jwt);
 
                 console.log(jwt, 'jwt');
-                setEmailValue(res.currentUser.email);
+
+                const email = res.email;
+                setEmailValue(email);
                 setIsLoggedIn(true);
                 history.push('/');
             })
@@ -179,7 +181,9 @@ function App() {
 
         api.editProfile(data, jwt)
             .then((res) => {
-                setCurrentUser(res.currentUser.name, res.currentUser.about);
+                const name = res.name;
+                const about = res.about;
+                setCurrentUser(name, about);
                 setIsEditProfilePopupOpen(false);
             })
             .catch((err) => {
@@ -194,7 +198,8 @@ function App() {
 
             api.changeAvatar(link, jwt)
                 .then((res) => {
-                    setCurrentUser(res.currentUser.avatar);
+                    const avatar = res.avatar;
+                    setCurrentUser(avatar);
                     setIsEditAvatarPopupOpen(false);
                 })
                 .catch((err) => console.log(err));
