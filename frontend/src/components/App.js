@@ -62,7 +62,7 @@ function App() {
         if (jwt) {
             api.getUserData(jwt)
                 .then((user) => {
-                    setCurrentUser(user.name, user.about);
+                    setCurrentUser({ name: user.name, about: user.about });
                 })
                 .catch((err) => console.log(err));
 
