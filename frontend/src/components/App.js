@@ -109,7 +109,7 @@ function App() {
                 jwt && localStorage.setItem('jwt', jwt);
 
                 console.log(jwt, 'jwt');
-                setEmailValue({ emailValue: res.email });
+                setEmailValue(res);
                 setIsLoggedIn(true);
                 history.push('/');
             })
