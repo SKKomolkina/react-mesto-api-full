@@ -215,7 +215,7 @@ function App() {
 
             api.changeAvatar(link, jwt)
                 .then((data) => {
-                    setCurrentUser(data);
+                    setCurrentUser({currentUser: data.avatar});
                     setIsEditAvatarPopupOpen(false);
                 })
                 .catch((err) => console.log(err));
