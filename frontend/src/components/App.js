@@ -46,9 +46,11 @@ function App() {
         if (jwt) {
             auth.getContent(jwt)
                 .then((res) => {
-                    setIsLoggedIn(true);
-                    setEmailValue(res.email);
-                    history.push('/');
+                    if (res) {
+                        setIsLoggedIn(true);
+                        setEmailValue(res.email);
+                        history.push('/');
+                    }
                 })
                 .catch((err) => {
                     console.log(err);
