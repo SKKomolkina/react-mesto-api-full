@@ -46,7 +46,7 @@ function App() {
         if (jwt) {
             auth.getContent(jwt)
                 .then((res) => {
-                    setEmailValue(res.email);
+                    setEmailValue({ email: res.email });
                     setIsLoggedIn(true);
                     history.push('/');
                 })
@@ -62,7 +62,7 @@ function App() {
         if (jwt) {
             api.getUserData(jwt)
                 .then((data) => {
-                    setCurrentUser(data);
+                    setCurrentUser({ name: data.name, about: data.about});
                 })
                 .catch((err) => console.log(err));
 
@@ -109,9 +109,7 @@ function App() {
                 jwt && localStorage.setItem('jwt', jwt);
 
                 console.log(jwt, 'jwt');
-
-                const email = res.email;
-                setEmailValue(email);
+                setEmailValue({ emailValue: res.email });
                 setIsLoggedIn(true);
                 history.push('/');
             })
@@ -181,9 +179,7 @@ function App() {
 
         api.editProfile(data, jwt)
             .then((res) => {
-                const name = res.name;
-                const about = res.about;
-                setCurrentUser(name, about);
+                setCurrentUser({ name: res.name, about: res.about });
                 setIsEditProfilePopupOpen(false);
             })
             .catch((err) => {
@@ -198,8 +194,7 @@ function App() {
 
             api.changeAvatar(link, jwt)
                 .then((res) => {
-                    const avatar = res.avatar;
-                    setCurrentUser(avatar);
+                    setCurrentUser({ avatar: res.avatar });
                     setIsEditAvatarPopupOpen(false);
                 })
                 .catch((err) => console.log(err));
