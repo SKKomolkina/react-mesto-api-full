@@ -61,8 +61,8 @@ function App() {
         const jwt = localStorage.getItem('jwt');
         if (jwt) {
             api.getUserData(jwt)
-                .then((data) => {
-                    setCurrentUser({ name: data.name, about: data.about});
+                .then((user) => {
+                    setCurrentUser(user.name, user.about);
                 })
                 .catch((err) => console.log(err));
 
