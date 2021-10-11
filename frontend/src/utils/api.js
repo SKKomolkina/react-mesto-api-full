@@ -101,7 +101,7 @@ class Api {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                avatar: avatarUrl,
+                avatar: avatarUrl.avatar,
             })
         })
             .then(res => this._checkResult(res));

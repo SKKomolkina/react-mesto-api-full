@@ -194,7 +194,7 @@ function App() {
             api.changeAvatar(link, localStorage.jwt)
                 .then((data) => {
                     console.log(data);
-                    setCurrentUser({avatar: data.avatar});
+                    setCurrentUser({avatar: data});
                     setIsEditAvatarPopupOpen(false);
                 })
                 .catch((err) => console.log(err));
