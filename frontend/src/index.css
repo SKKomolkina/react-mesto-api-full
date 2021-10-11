@@ -66,6 +66,7 @@
 @import url(./blocks/popup/__form_delete/popup__form_delete.css);
 @import url(./blocks/popup/__title-delete/popup__title-delete.css);
 @import url(./blocks/popup/__save-delete/popup__save-delete.css);
+@import url(./blocks/popup/__info-container/popup__info-container.css);
 
 
 @import url(./blocks/auth/auth.css);
