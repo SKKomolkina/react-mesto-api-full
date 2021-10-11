@@ -25,7 +25,7 @@ import failImage from '../images/fail.svg';
 function App() {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
-    const [currentUser, setCurrentUser] = React.useState({});
+    const [currentUser, setCurrentUser] = React.useState({email: '', name: '', about: '', avatar: ''});
     const [emailValue, setEmailValue] = React.useState('');
 
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
@@ -75,7 +75,7 @@ function App() {
             api.getUserData(localStorage.jwt)
                 .then((data) => {
                     console.log(data);
-                    setCurrentUser({data});
+                    setCurrentUser({name: data.name, about: data.about, avatar: data.avatar});
                 })
                 .catch((err) => console.log(err));
         }
