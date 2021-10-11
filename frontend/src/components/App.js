@@ -75,7 +75,7 @@ function App() {
             api.getUserData(localStorage.jwt)
                 .then((data) => {
                     console.log(data);
-                    setCurrentUser(data.name, data.about);
+                    setCurrentUser({name: data.name, about: data.about});
                 })
                 .catch((err) => console.log(err));
         }
@@ -182,7 +182,7 @@ function App() {
             api.editProfile(data, localStorage.jwt)
                 .then((res) => {
                     console.log(res);
-                    setCurrentUser(res.name, res.about);
+                    setCurrentUser({name: res.name, about: res.about});
                     setIsEditProfilePopupOpen(false);
                 })
                 .catch((err) => {
@@ -194,7 +194,7 @@ function App() {
             api.changeAvatar(link, localStorage.jwt)
                 .then((data) => {
                     console.log(data);
-                    setCurrentUser(data.avatar);
+                    setCurrentUser({avatar: data.avatar});
                     setIsEditAvatarPopupOpen(false);
                 })
                 .catch((err) => console.log(err));
