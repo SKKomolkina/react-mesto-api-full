@@ -40,6 +40,7 @@ class Api {
             body: JSON.stringify({
                 name: data.name,
                 about: data.about,
+                avatar: data.avatar,
             })
         })
             .then(res => this._checkResult(res));
