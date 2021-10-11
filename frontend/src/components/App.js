@@ -75,7 +75,7 @@ function App() {
             api.getUserData(localStorage.jwt)
                 .then((data) => {
                     console.log(data);
-                    setCurrentUser({name: data.name, about: data.about, avatar: data.avatar});
+                    setCurrentUser({name: data.name, about: data.about, avatar: currentUser.avatar});
                 })
                 .catch((err) => console.log(err));
         }
