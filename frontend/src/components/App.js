@@ -62,7 +62,7 @@ function App() {
         if (isLoggedIn) {
             api.getInitialCards(localStorage.jwt)
                     .then((cards) => {
-                        setCards(cards.reverse);
+                        setCards(cards);
                     })
                     .catch((err) => {
                         console.log(err);
