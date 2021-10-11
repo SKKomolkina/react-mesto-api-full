@@ -79,7 +79,7 @@ function App() {
                 })
                 .catch((err) => console.log(err));
         }
-    }, [isLoggedIn]);
+    }, [isLoggedIn, history]);
 
 
     // <---------- Registration & Auth ---------->
