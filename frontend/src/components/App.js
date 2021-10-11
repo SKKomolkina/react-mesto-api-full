@@ -217,17 +217,14 @@ function App() {
     }
 
     function handleCardLike(card) {
-        if (isLoggedIn) {
-            const jwt = localStorage.getItem('jwt');
             const isLiked = card.likes.some(i => i._id === currentUser._id);
-            const changeLike = isLiked ? api.deleteLike(card._id, jwt) : api.setLike(card._id, jwt);
+            const changeLike = isLiked ? api.deleteLike(card._id, localStorage.jwt) : api.setLike(card._id, localStorage.jwt);
 
             changeLike.then((newCard) => {
                 setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
             })
                 .catch((err) => console.log(err));
         }
-    }
 
     function handleCardDelete(card) {
         if (isLoggedIn) {
