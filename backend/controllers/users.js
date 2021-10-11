@@ -115,7 +115,7 @@ module.exports.updateUser = (req, res, next) => {
     })
     .catch((err) => {
       if ((err.name === 'CastError') || (err.name === 'ValidationError')) {
-        throw new NotFoundError('Gереданы некорректные данные');
+        throw new NotFoundError('Переданы некорректные данные');
       }
     })
     .catch(next);
@@ -126,6 +126,17 @@ module.exports.updateAvatar = (req, res, next) => {
 
   User.findByIdAndUpdate(req.user._id, { avatar },
     { new: true, runValidators: true })
-    .then((user) => res.status(200).send(user.avatar))
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
+      } else {
+        res.status(200).send(user)
+      }
+    })
+    .catch((err) => {
+      if ((err.name === 'CastError') || (err.name === 'ValidationError')) {
+        throw new NotFoundError('Переданы некорректные данные');
+      }
+    })
     .catch(next);
 };
