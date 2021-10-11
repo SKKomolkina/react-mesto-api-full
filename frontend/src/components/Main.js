@@ -3,7 +3,7 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 import Card from './Card.js';
 
-function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike, onCardDelete, cards }) {
+function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike, onCardDelete, cards, user }) {
     const currentUser = React.useContext(CurrentUserContext);
 
     return (
@@ -12,14 +12,14 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike
                 <div className="profile__container">
                     <div className="profile__photo-wrapper" onClick={onEditAvatar}>
                         <img name="avatar"
-                            src={currentUser.avatar}
+                            src={user.avatar}
                             alt="Ваше фото" className="profile__photo" />
                     </div>
 
                     <div className="profile__info">
-                        <h1 className="profile__name">{currentUser.name}</h1>
+                        <h1 className="profile__name">{user.name}</h1>
                         <button className="profile__btn-edit" type="button" value="" onClick={onEditProfile} />
-                        <p className="profile__about">{currentUser.about}</p>
+                        <p className="profile__about">{user.about}</p>
                     </div>
 
                     <button className="profile__btn-add" type="button" onClick={onAddPlace} />

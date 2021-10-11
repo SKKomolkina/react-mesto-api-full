@@ -262,6 +262,8 @@ function App() {
                         isLoggedIn={isLoggedIn}
                         component={Main}
 
+                        user={currentUser}
+
                         onEditAvatar={handleEditAvatarClick}
                         onEditProfile={handleEditProfileClick}
                         onAddPlace={handleAddPlaceClick}
