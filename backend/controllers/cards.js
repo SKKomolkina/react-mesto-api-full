@@ -26,10 +26,10 @@ module.exports.deleteCardById = (req, res, next) => {
   Card.findById(cardId)
     .then((card) => {
       if (!card) {
-        next(new NotFoundError('Возникла ошибка: карта с указанным ID не найдена.'));
+        return next (new NotFoundError('Возникла ошибка: карта с указанным ID не найдена.'));
       }
       if (owner !== card.owner) {
-        next(new UnauthorizedError('Вы не можете удалить чужую карточку!'));
+        return next (new UnauthorizedError('Вы не можете удалить чужую карточку!'));
       }
     });
 
