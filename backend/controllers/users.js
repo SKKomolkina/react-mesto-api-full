@@ -7,7 +7,6 @@ const User = require('../models/userSchema');
 const NotFoundError = require('../constants/NotFoundError');
 const ConflictError = require('../constants/ConflictError');
 const DefaultError = require('../constants/DefaultError');
-const ValidationError = require('../constants/ValidationError');
 const UnauthorizedError = require('../constants/UnauthorizedError');
 
 module.exports.login = (req, res, next) => {
@@ -82,7 +81,7 @@ module.exports.getCurrentUser = (req, res, next) => {
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.status(200).send({users}))
+    .then((users) => res.status(200).send({ users }))
     .catch(next);
 };
 
@@ -126,7 +125,7 @@ module.exports.updateAvatar = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден');
       } else {
-        res.status(200).send(user)
+        res.status(200).send(user);
       }
     })
     .catch((err) => {

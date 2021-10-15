@@ -4,7 +4,7 @@ const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
 
 const validateUrl = (value) => {
-  const result = validator.isURL(value, {require_protocol: true});
+  const result = validator.isURL(value, { require_protocol: true });
   if (result) {
     return value;
   }
