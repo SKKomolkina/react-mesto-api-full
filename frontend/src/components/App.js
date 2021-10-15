@@ -234,8 +234,9 @@ function App() {
         if (isLoggedIn) {
             const jwt = localStorage.getItem('jwt');
 
-            api.deleteCard(card._id, jwt)
+            api.deleteCard(card, jwt)
                 .then(() => {
+                    console.log(card);
                     const newCard = cards.filter((c) => c._id !== card._id);
                     setCards(newCard);
                 })
