@@ -33,7 +33,7 @@ module.exports.deleteCardById = (req, res, next) => {
       }
     });
 
-  Card.findByIdAndRemove(cardId)
+  return Card.findByIdAndRemove(cardId)
     .then((data) => {
       res.status(200).send(data);
     })
