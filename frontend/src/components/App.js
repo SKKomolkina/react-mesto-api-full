@@ -239,7 +239,9 @@ function App() {
                     const newCard = cards.filter((c) => c._id !== card._id);
                     setCards(newCard);
                 })
-                .catch((err) => console.log(err));
+                .catch((err) => {
+                    console.log(err);
+                });
         }
     }
 
