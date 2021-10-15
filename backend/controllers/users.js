@@ -13,10 +13,6 @@ const UnauthorizedError = require('../constants/UnauthorizedError');
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    throw new ValidationError('Ошибка ввода данных!');
-  }
-
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {

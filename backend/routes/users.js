@@ -4,7 +4,7 @@ const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
 
 const validateUrl = (value) => {
-  const result = validator.isURL(value);
+  const result = validator.isURL(value, {require_protocol: true});
   if (result) {
     return value;
   }
@@ -22,7 +22,7 @@ router.get('/', getUsers);
 router.get('/me', getCurrentUser);
 
 // http://localhost:3000/users/:userId
-router.get('/:_id', celebrate({
+router.get('/:userId', celebrate({
   params: Joi.object().keys({
     userId: Joi.string().alphanum().length(24),
   }),
@@ -32,8 +32,8 @@ router.get('/:_id', celebrate({
 
 router.patch('/me', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2).max(30),
   }).unknown(true),
 }), updateUser);
 

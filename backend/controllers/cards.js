@@ -20,17 +20,21 @@ module.exports.createCard = (req, res, next) => {
 };
 
 module.exports.deleteCardById = (req, res, next) => {
-  const { cardId } = req.params;
+  const { cardId } = req.params.cardId;
   const owner = req.user._id;
+
+  Card.findById(cardId)
+    .then((card) => {
+      if (!card) {
+        return next(new NotFoundError('Возникла ошибка: карта с указанным ID не найдена.'));
+      }
+      if (owner !== card.owner) {
+        next(new UnauthorizedError('Вы не можете удалить чужую карточку!'));
+      }
+    })
 
   Card.findByIdAndRemove(cardId)
     .then((data) => {
-      if (!data) {
-        next(new NotFoundError('Возникла ошибка: карта с указанным ID не найдена.'));
-      }
-      if (owner !== String(data.owner)) {
-        next(new UnauthorizedError('Вы не можете удалить чужую карточку!'));
-      }
       res.status(200).send(data);
     })
     .catch((err) => {
