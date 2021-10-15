@@ -31,18 +31,18 @@ module.exports.deleteCardById = (req, res, next) => {
       if (owner !== String(card.owner)) {
         return next (new UnauthorizedError('Вы не можете удалить чужую карточку!'));
       }
-    });
 
-  return Card.findByIdAndRemove(cardId)
-    .then((data) => {
-      res.status(200).send(data);
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        throw new ValidationError('Переданы некорректные данные');
-      }
-    })
-    .catch(next);
+      return Card.findByIdAndRemove(cardId)
+        .then((data) => {
+          res.status(200).send(data);
+        })
+        .catch((err) => {
+          if (err.name === 'CastError') {
+            throw new ValidationError('Переданы некорректные данные');
+          }
+        })
+        .catch(next);
+    });
 };
 
 module.exports.likeCard = (req, res, next) => {
