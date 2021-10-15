@@ -20,7 +20,7 @@ module.exports.createCard = (req, res, next) => {
 };
 
 module.exports.deleteCardById = (req, res, next) => {
-  const { cardId } = req.params.cardId;
+  const { cardId } = req.params;
   const owner = req.user._id;
 
   Card.findById(cardId)
