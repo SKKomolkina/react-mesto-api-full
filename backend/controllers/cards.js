@@ -53,7 +53,7 @@ module.exports.likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true, runValidators: true },
   ).then((card) => {
-      if (card !== cardId) {
+      if (!card) {
         console.log(card);
         return next(new NotFoundError('Возникла ошибка: карта с указанным ID не найдена.'));
       }
