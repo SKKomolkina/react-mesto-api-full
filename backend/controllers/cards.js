@@ -26,10 +26,10 @@ module.exports.deleteCardById = (req, res, next) => {
   Card.findById(cardId)
     .then((card) => {
       if (!card) {
-        return next (new NotFoundError('Возникла ошибка: карта с указанным ID не найдена.'));
+        return next(new NotFoundError('Возникла ошибка: карта с указанным ID не найдена.'));
       }
       if (owner !== String(card.owner)) {
-        return next (new UnauthorizedError('Вы не можете удалить чужую карточку!'));
+        return next(new UnauthorizedError('Вы не можете удалить чужую карточку!'));
       }
 
       return Card.findByIdAndRemove(cardId)
@@ -52,10 +52,10 @@ module.exports.likeCard = (req, res, next) => {
     cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true, runValidators: true },
-  )
-    .then((card) => {
-      if (!card) {
-        next(new NotFoundError('Возникла ошибка: карта с указанным ID не найдена.'));
+  ).then((card) => {
+      if (cardId !== card) {
+        console.log(card);
+        return next(new NotFoundError('Возникла ошибка: карта с указанным ID не найдена.'));
       }
       return res.status(200).send(card);
     })

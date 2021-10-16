@@ -110,7 +110,7 @@ app.use(auth);
 app.use('/users', userRouter);
 
 // http://localhost:3000/cards
-app.use('/', cardRouter);
+app.use('/cards', cardRouter);
 
 app.use(errorLogger);
 
