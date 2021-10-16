@@ -1,8 +1,8 @@
 const Card = require('../models/cardSchema');
 
 const NotFoundError = require('../constants/NotFoundError');
-const UnauthorizedError = require('../constants/UnauthorizedError');
 const ValidationError = require('../constants/ValidationError');
+const Forbidden = require('../constants/Forbidden');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -29,7 +29,7 @@ module.exports.deleteCardById = (req, res, next) => {
         return next(new NotFoundError('Возникла ошибка: карта с указанным ID не найдена.'));
       }
       if (owner !== String(card.owner)) {
-        return next(new UnauthorizedError('Вы не можете удалить чужую карточку!'));
+        return next(new Forbidden('Вы не можете удалить чужую карточку!'));
       }
 
       return Card.findByIdAndRemove(cardId)
@@ -52,9 +52,9 @@ module.exports.likeCard = (req, res, next) => {
     cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true, runValidators: true },
-  ).then((card) => {
+  )
+    .then((card) => {
       if (!card) {
-        console.log(card);
         return next(new NotFoundError('Возникла ошибка: карта с указанным ID не найдена.'));
       }
       return res.status(200).send(card);
